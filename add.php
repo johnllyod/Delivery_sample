@@ -9,7 +9,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Added an if to keep the page secured
 	{
 		if ($_SESSION['user'] == 'admin')
 		{
-			echo $_POST['addToList'];
 			if (isset($_POST['addToList']))
 			{
 				 $productN = ($_POST['productN']);

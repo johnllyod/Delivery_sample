@@ -10,15 +10,15 @@
 </head>
 
 <body class="container">
-<h2 class="container">Delivery</h2>
+<a href="index.php" class="mb-2"><img src="img/Logo.png"></a>
 <?php
 session_start();
-$con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error());
+include 'config/dbConection.php';
 $query = mysqli_query($con, "Select * from list");
 
 if(isset($_SESSION['user']))  //checks if user is logged in
 {
- $user = $_SESSION['user']; //assigns user value
+ 	$user = $_SESSION['user']; //assigns user value
 }
 	echo "<div class='mx-auto col-lg-9 col-md-12'>
 	<div class='nav'>
@@ -32,18 +32,20 @@ if(isset($_SESSION['user']))  //checks if user is logged in
 			$address = $row['user_address'];
 		}
 
-		if ($_SESSION['user'] == 'admin')
+		if ($_SESSION['user'] != 'admin')
 		{
-			echo "<form action='admin.php' method='GET'><button name='page' value='home'><h3>".$user."</h3></button>";
-		}
-		else {
 			echo "<form action='index.php' method='GET'><button name='page' value='home'><h3>".$user."</h3></button>";
+		}
+		else 
+		{
+			echo "<form action='admin.php' method='GET'><button name='page' value='home'><h3>".$user."</h3></button></form><form action='index.php' method='GET'>";
 		}
 	}
 	else {
 		echo "<form action='index.php' method='GET'><button name='page' value='Home'><h3>Home</h3></button>";
 	}
-	echo "<button name='page' value='Product'><h3>Products</h3></button>
+	echo "
+	<button name='page' value='Product'><h3>Products</h3></button>
 	<button name='page' value='Promo'><h3>Promo</h3></button>
 	<button name='page' value='About'><h3>About</h3></button>
 	<button name='page' value='Contact'><h3>Contact</h3></button>
@@ -164,12 +166,23 @@ if (isset($_GET['page']))
 else 
 {
 		echo 
-		"<div id='carouselSlide' class='carousel slide' data-ride='carousel'>
+		"<br><div id='carouselSlide' class='carousel slide mb-5' data-ride='carousel'>
 			<div class='carousel-inner'>
 				<div class='carousel-item active'>
-					<img class='d-block w-100' src='img/Promo1' alt='first img'>
+					<a href='index.php?page=Promo'><img class='d-block w-100' src='img/Promo1.png' alt='first img'></a>
+				</div>
+				<div class='carousel-item'>
+					<a href='index.php?page=Promo'><img class='d-block w-100' src='img/Promo2.png' alt='first img'></a>
 				</div>
 			</div>
+			<a class='carousel-control-prev' href='#carouselSlide' role='button' data-slide='prev'>
+				<span class='carousel-control-prev-icon' aria-hidden='true'></span>
+				<span class='sr-only'>Previous</span>
+			</a>
+			<a class='carousel-control-next' href='#carouselSlide' role='button' data-slide='next'>
+				<span class='carousel-control-next-icon' aria-hidden='true'></span>
+				<span class='sr-only'>Next</span>
+			</a>
 		</div>";
 }
 ?>

@@ -6,19 +6,26 @@
  	 	<link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
 		<link rel="stylesheet" href="FoodDel.css">
     </head>
-    <body>
-    	<div class="bg-danger text-center" id="warningDiv" style="color:white; display: none;"><h5 id="textWarning">Failed</h5></div>
+    <body class="bg-dark">
+    	<div class="bg-danger text-center" id="warningDiv" style="display: none;"><h5 id="textWarning">Failed</h5></div>
 	<?php
-		if (isset($_POST['loginBtn']))
+		if (isset($_POST['loginadminBtn'])) 
 	  	{
-	  		include'checklogin.php';
+	  		if ($_POST['username'] == "admin")
+	  		{
+		  		if ($_POST['password'] == "admin")
+		  		{
+		  			session_start();
+		  			$_SESSION['user'] = "admin";
+		  			header("Location: admin.php?page=home");
+		  		}
+	  		}
 	  	}
 	?>
 	<center>
 		<div class="log mt-lg-5">
-	        <h2>Login Page</h2>
-	        <a href="index.php?page=Home">Click here to go back</a><br/><br/>
-	        <form action="login.php" method="POST">
+	        <h2>Admin Page</h2>
+	        <form action="login_admin.php" method="POST">
 		        <table>
 					<tr>
 						<td><h5>Enter Username:</h5>
@@ -29,8 +36,7 @@
 						<td><input type="password" name="password" required="required" />
 					</tr>
 				</table><br>
-		        <input type="submit" name="loginBtn" value="Login" class="btn" style="background-color: #fdcb9e;" /><br/><br/>
-				<a href="index.php?page=register">No Account? Register Here!</a>
+		        <input type="submit" name="loginadminBtn" value="Login" class="btn" style="background-color: #fdcb9e;" /><br/><br/>
 	        </form>
     	</div>
     </td>

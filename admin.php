@@ -20,26 +20,36 @@ if (isset($_SESSION['user']))
 } 
 else 
 {
-  header("location: login.php");
+  header("location: login_admin.php");
+}
+
+if (isset($_GET['page']))
+{
+  if ($_GET['page'] == "logout")
+  { 
+    session_start();
+    session_destroy();
+    header("location: login_admin.php");
+  }
+  else if ($_GET['page'] == "Product")
+  { 
+    header("location: index.php?page=Product");
+  }
 }
  ?>
  <body class="bg-dark">
 <div class="container text-light">
-  <h2 class="container text-light">Delivery</h2>
-   <div class='container'>
+  <a href="admin.php?page=home" class="mb-2"><img src="img/Logo.png"></a>
     <div class=' row mx-auto col-lg-9 col-md-12'>
       <div class='nav mx-auto'>
       		<?php 
-      		echo "<form action='admin.php' method='GET'><button name='page' value='home'><h3>Menu</h3></button><button name='page' value='orders' type='submit'><h3>Orders</h3></button></form>";
-      		echo "<form action='index.php' method='GET'>
-          
+      		echo "<form action='admin.php' method='GET'><button name='page' value='home'><h3>Menu</h3></button><button name='page' value='orders' type='submit'><h3>Orders</h3></button>
           <button name='page' value='Product' type='submit'><h3>Check Site</h3></button>
           <button name='page' value='logout' type='submit'><h3>Logout</h3></button>
       		</form>";
       		?>
     	</div>
     </div>
-  </div>
   <br><br>
     <?php 
     echo '<h3>'.$_SESSION['user'].'</h3>'?>

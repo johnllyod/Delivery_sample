@@ -22,14 +22,7 @@
 			{
 				 $_SESSION['user'] = $username;
 				 $_SESSION['totalPrice'] = 0;
-				 if (strtolower($username) == "admin")
-				 {
-				 	header("location: admin.php?page=home");
-				 }
-				 else 
-				 {
-				 	header("location: home.php");
-				 }
+				 header("location: home.php");
 			}
 			else
 			{
@@ -37,7 +30,7 @@
 				function ShowWarning()
 				{
 					document.getElementById("warningDiv").style.display="block";
-					document.getElementById("textWarning").innerHTML = "Incorrect Password!";
+					document.getElementById("textWarning").innerHTML = "Incorrect Username or Password!";
 				}
 				
 				function HideWarning()
@@ -58,7 +51,7 @@
 			echo '<script type="text/javascript">function ShowWarning()
 			{
 				document.getElementById("warningDiv").style.display="block";
-				document.getElementById("textWarning").innerHTML = "Incorrect Username!";
+				document.getElementById("textWarning").innerHTML = "Incorrect Username or Password.";
 			}
 
 			function HideWarning()

@@ -19,7 +19,7 @@
  ?>
  <body>
  <div class='container'>
-	<h2>Delivery</h2>
+<a href="index.php" class="mb-2"><img src="img/Logo.png"></a>
 	<div class='mx-auto col-lg-9 col-md-12'>
 	<div class='nav'>
 	<div class='navBar btn row mx-auto form-inline'>
