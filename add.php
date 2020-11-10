@@ -1,15 +1,15 @@
 <?php
-if($_SERVER['REQUEST_METHOD'] == "POST") //Added an if to keep the page secured
+if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 { 
-	if (session_status() == PHP_SESSION_NONE) 
+	if (session_status() == PHP_SESSION_NONE) // Check if session was already started
 	{
     	session_start();
 	}
 	if (isset($_SESSION['user']))
 	{
-		if ($_SESSION['user'] == 'admin')
+		if ($_SESSION['user'] == 'admin') // User is admin
 		{
-			if (isset($_POST['addToList']))
+			if (isset($_POST['addToList'])) // admin adding menu item
 			{
 				 $productN = ($_POST['productN']);
 				 $details = ($_POST['details']);
@@ -21,16 +21,16 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Added an if to keep the page secured
 				 $isSale = "no";
 				 $sale_Price = 0;
 				 $con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error()); //Connect to server
-				 foreach($_POST['public'] as $each_check) //gets the data from the checkbox
+				 foreach($_POST['public'] as $each_check) //gets the data from the checkbox, if its public then it will show up on the product tab of the site.
 				 {
-					if($each_check !=null )
+					if($each_check != null)
 					{
-						$decision = "yes"; //sets the value
+						$decision = "yes";
 					}
 				 }
 				 foreach($_POST['sale'] as $sale_check)
 				 {
-					if($sale_check !=null )
+					if($sale_check != null)
 					{
 						$isSale = "yes";
 						$sale_Price = $price-($price * ($_POST['saleprice']/100));
@@ -41,12 +41,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Added an if to keep the page secured
 				 {
 					mysqli_query($con, "INSERT INTO list (Product_name, details, Price, date_posted, time_posted, Sale_Price, Sale, public, Image_filename) VALUES ('$productN','$details','$price','$date','$time', $sale_Price, '$isSale','$decision','$img_Name')"); //SQL query 	
 				 }
-				header("location: admin.php");
+				//header("location: admin.php");
 			}
 		}
 		else 
 		{
-			if (isset($_POST['addCart']))
+			if (isset($_POST['addCart'])) // Save item on a session
 			{
 				$_SESSION['cartItem'][] = $_POST['addCart'];
 				$_SESSION['itemQuan'][] = $_POST['quantity'];
@@ -57,9 +57,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Added an if to keep the page secured
 	}
 	else 
 	{
-		if (isset($_POST['addCart']))
+		if (isset($_POST['addCart'])) // If not yet login
 		{
-			header('Location:login.php');
+			//header('Location:login.php');
 		}
 	}
 }

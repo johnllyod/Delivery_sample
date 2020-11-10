@@ -1,9 +1,10 @@
 <html>
 <head>
 <meta charset="uft-8">
-<title>Food delivery</title>
+<title>Home MadMeal</title>
 <!--CSS-->
 <meta charset="utf-8">
+<link rel="icon" href="img/Logo_Small.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
 <link rel="stylesheet" href="FoodDel.css">
@@ -23,7 +24,7 @@ if(isset($_SESSION['user']))  //checks if user is logged in
 	echo "<div class='mx-auto col-lg-9 col-md-12'>
 	<div class='nav'>
 	<div class='navBar btn row mx-auto form-inline'>";
-	if (isset($user))
+	if (isset($user)) // Checks if user is login
 	{
 		$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
 		$userAddRes = mysqli_query($con, $userAddQ);
@@ -41,7 +42,8 @@ if(isset($_SESSION['user']))  //checks if user is logged in
 			echo "<form action='admin.php' method='GET'><button name='page' value='home'><h3>".$user."</h3></button></form><form action='index.php' method='GET'>";
 		}
 	}
-	else {
+	else 
+	{
 		echo "<form action='index.php' method='GET'><button name='page' value='Home'><h3>Home</h3></button>";
 	}
 	echo "
@@ -50,10 +52,13 @@ if(isset($_SESSION['user']))  //checks if user is logged in
 	<button name='page' value='About'><h3>About</h3></button>
 	<button name='page' value='Contact'><h3>Contact</h3></button>
 	";
-	if (isset($user)){
-		echo"<button name='page' value='logout'><h3>Logout</h3></button>";
+	if (isset($user))
+	{
+		echo"<button name='page' value='cart'><h3>Cart</h3></button>
+		<button name='page' value='logout'><h3>Logout</h3></button>";
 	}
-	else {
+	else 
+	{
 		echo"<button name='page' value='login'><h3>Login</h3></button>
 		<button name='page' value='register'><h3>Register</h3></button>";
 	}
@@ -64,20 +69,20 @@ if(isset($_SESSION['user']))  //checks if user is logged in
 		</div>';
 if (isset($_GET['page']))
 {
-	switch ($_GET['page'])
+	switch ($_GET['page']) // Checks what page to display
 	{
-		case'Product':
+		case'Product': // Display all product available.
 			include 'add.php';
 			echo
 				"<br><br><div class='row'>";
 			while($row = mysqli_fetch_array($query))
 			{
-				if ($row['public'] == "yes")
+				if ($row['public'] == "yes") // If a product is set as public then it will be displayed.
 				{
 					echo "
 					<div class='items col-lg-3 col-md-6 mb-5'><button class='btn' onclick='DisplayDesc(this)' name='Product' value='".$row['Product_name']."' data-toggle='modal' data-target='#food_Desc'><img src='img/".$row['Image_filename']."' class='col-10'></img>
 					</button><h3>".$row['Product_name']."</h3>";
-					if ($row['Sale'] == "no")
+					if ($row['Sale'] == "no") // item is not on sale.
 					{
 						echo "<div class='row'><div class='row mx-auto'><h3>Php</h3><h3 id='price".$row['Product_name']."'>".$row['Price']."</h3></div></div>";
 					}
@@ -90,7 +95,7 @@ if (isset($_GET['page']))
 			}
 			echo "</div>";
 		break;
-		case'Promo':
+		case'Promo': // This page shows all item on sale.
 			include 'add.php';
 			echo
 				"<br><br><div class='row'>";
@@ -106,7 +111,7 @@ if (isset($_GET['page']))
 			}
 			echo "</div>";
 		break;
-		case'About':
+		case'About': // Display information about Home MadMeal.
 		echo
 		"
 			<div class='about'>
@@ -114,7 +119,7 @@ if (isset($_GET['page']))
 			</div>
 		";
 		break;
-		case'Contact':
+		case'Contact': // Display contact page.
 		echo 
 		"
 		<div class='contacts'>
@@ -124,11 +129,15 @@ if (isset($_GET['page']))
 		</div>
 		";
 		break;
-		case 'login':
+		case 'login': // Redirect to the login page.
 			header("Location: login.php");
 		break;
-		
-		case 'register':
+
+		case 'cart': // Redirect to the checkout page.
+			header("Location: checkout.php");
+		break;
+
+		case 'register': // Redirect to the register page.
 			header("Location: register.php");
 		break;
 		
@@ -136,11 +145,11 @@ if (isset($_GET['page']))
 			header("Location: logout.php");
 		break;
 		
-		case 'home':
+		case 'home': // Redirect to the home page.
 			header("Location: home.php");
 		break;
 		
-		default:
+		default: // Display the main page.
 		echo 
 		"<br><div id='carouselSlide' class='carousel slide mb-5' data-ride='carousel'>
 			<div class='carousel-inner'>
@@ -187,7 +196,7 @@ else
 }
 ?>
 
-<!--MODAL-->
+<!--MODAL for adding items to the cart-->
 <div class="modal fade" id="food_Desc" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
 		<div class="modal-content">
@@ -220,7 +229,7 @@ else
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-	function DisplayDesc(msg)
+	function DisplayDesc(msg) // Change modal info according to the item that the user click.
 	{
 		var str1 = "foodDes";
 		var str2 = msg.value;
@@ -235,7 +244,7 @@ else
 		document.getElementById("foodPrice").value = document.getElementById(finalPrcId).innerHTML;
 	}
 
-	function PriceChange()
+	function PriceChange() // Change the price according to the quantity
 	{
 		var str1 = "price";
 		var str2 = document.getElementById("ModalLabel").innerHTML;

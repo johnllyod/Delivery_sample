@@ -1,8 +1,9 @@
 <html>
  <head>
-  <title>Food delivery</title>
+  <title>Home MadMeal</title>
   <!--CSS-->
   <meta charset="utf-8">
+  <link rel="icon" href="img/Logo_Small.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="FoodDel.css">
   <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
@@ -14,50 +15,50 @@ if (isset($_SESSION['user']))
 {
     if($_SESSION['user'] != "admin") //checks if admin is logged in
     {
-      header("location:index.php?page=home");
+      header("location:index.php?page=home"); // redirect to the index if the user is not admin
     }
-    $user = $_SESSION['user']; //assigns user value
+    else 
+    {
+      $user = $_SESSION['user']; //assigns admin
+    }
 } 
 else 
 {
-  header("location: login_admin.php");
+  header("location: login_admin.php"); // redirect to the admin login page if admin is not login
 }
 
-if (isset($_GET['page']))
+if (isset($_GET['page'])) // check if page has a value
 {
-  if ($_GET['page'] == "logout")
+  if ($_GET['page'] == "logout") // logging out
   { 
-    session_start();
-    session_destroy();
-    header("location: login_admin.php");
+    session_destroy(); // removes all session
+    header("location: login_admin.php"); // redirect to the login page
   }
   else if ($_GET['page'] == "Product")
   { 
-    header("location: index.php?page=Product");
+    header("location: index.php?page=Product"); // change the page to the product page
   }
 }
  ?>
- <body class="bg-dark">
-<div class="container text-light">
+ <body class="bg-dark container text-light">
   <a href="admin.php?page=home" class="mb-2"><img src="img/Logo.png"></a>
     <div class=' row mx-auto col-lg-9 col-md-12'>
       <div class='nav mx-auto'>
-      		<?php 
-      		echo "<form action='admin.php' method='GET'><button name='page' value='home'><h3>Menu</h3></button><button name='page' value='orders' type='submit'><h3>Orders</h3></button>
+    		<form action='admin.php' method='GET'> <!--navigation bar-->
+          <button name='page' value='home'><h3>Menu</h3></button><button name='page' value='orders' type='submit'><h3>Orders</h3></button>
           <button name='page' value='Product' type='submit'><h3>Check Site</h3></button>
           <button name='page' value='logout' type='submit'><h3>Logout</h3></button>
-      		</form>";
-      		?>
+    		</form>
     	</div>
     </div>
   <br><br>
+  <h3>ADMIN</h3>
     <?php 
-    echo '<h3>'.$_SESSION['user'].'</h3>'?>
-    <?php
     if (isset($_GET['page']))
     {
-      if ($_GET['page'] != 'orders')
+      if ($_GET['page'] != 'orders') // if page is not equal to orders.
       {
+        // Form for adding an item to the menu list.
         echo '<form action="add.php" method="POST">
          Add more to list: <br/>
          Product name: <input type="text" name="productN"/><br/>
@@ -68,8 +69,10 @@ if (isset($_GET['page']))
          Public Post? <input type="checkbox" name="public[]" value="yes"/><br/>
          Upload image <input type="file" name="image_file" id="fileimage"/><br/>
          <input type="submit" name="addToList" value="Add to list"/>
-        </form>
-        <h2 align="center">Menu list</h2>
+        </form>';
+
+        // Table that shows all the items in the menu, you can also edit and delete items here. 
+        echo '<h2 align="center">Menu list</h2>
         <table border="1px" width="100%" class="text-light">
          <tr class="text-center">
           <th>Id</th>
@@ -106,8 +109,9 @@ if (isset($_GET['page']))
           }
         echo '</table>';
       }
-      else 
+      else // if page is equal to orders
       {
+        // this is a list of all orders
         echo '
         <h2 align="center">Order list</h2>
         <form action="admin.php?page=orders" method="POST">
@@ -150,49 +154,49 @@ if (isset($_GET['page']))
          </tr>';
           $con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error()); //Connect to server
 
-          if (isset($_POST['sortBy']))
+          if (isset($_POST['sortBy'])) // Checks if filter is used.
           {
-            if ($_POST['sort'] == "OrderDate")
+            if ($_POST['sort'] == "OrderDate") // chacks if filter used is by Date
             {
-              if ($_POST['byOrderDate'] == date('Y-m-d'))
+              if ($_POST['byOrderDate'] == date('Y-m-d')) // Sort orders that are made only for today
               {
                 echo $_POST['sort'].", "."Today";
                 $sqlStr = "SELECT * FROM `orders-list` where ".$_POST['sort']."='".date('Y-m-d')."'";
               }
-              else if ($_POST['byOrderDate'] == "week")
+              else if ($_POST['byOrderDate'] == "week") // Sort orders that are made only for the whole week
               {
                 echo $_POST['sort'].", "."This Week";
                 $sqlStr = "SELECT * from `orders-list` WHERE OrderDate >= DATE_ADD(NOW(), INTERVAL -7 DAY) and OrderDate <= NOW()";
               }
               else
               {
-                if ($_POST['byOrderDate'] == date("Y-m"))
+                if ($_POST['byOrderDate'] == date("Y-m")) // Sort orders that are made only for the whole month
                 {
                   echo $_POST['sort'].", This month";
                 }
-                else 
+                else // Sort orders that are made only for the whole Year
                 {
                   echo $_POST['sort'].", This year";
                 }
                 $sqlStr = "SELECT * from `orders-list` WHERE OrderDate LIKE '%".$_POST['byOrderDate']."%'";
               }
             }
-            else if ($_POST['sort'] == "User")
+            else if ($_POST['sort'] == "User") // Sort orders by who order the item(s).
             {
-                $sqlStr = "SELECT * from `orders-list` order by User ".$_POST['byUser']."";
+                $sqlStr = "SELECT * from `orders-list` order by User ".$_POST['byUser'].""; // the value of $_POST['byUser'] is either ASC or DESC
             }
             else if ($_POST['sort'] == "Payment_Method")
             {
-                $sqlStr = "SELECT * from `orders-list` WHERE Payment_Method = '".$_POST['byPayment_Method']."'";
+                $sqlStr = "SELECT * from `orders-list` WHERE Payment_Method = '".$_POST['byPayment_Method']."'"; // the value of $_POST['byPayment_Method'] is either COD or Card
             }
             $query = mysqli_query($con, $sqlStr); // SQL Query
           }
           else 
           {
-            $query = mysqli_query($con, "SELECT * FROM `orders-list`"); // SQL Query
+            $query = mysqli_query($con, "SELECT * FROM `orders-list`"); // SQL Query if there is no filter.
           }
 
-          while($row = mysqli_fetch_array($query))
+          while($row = mysqli_fetch_array($query)) // get all data available depending on the condition above.
           {
             Print "<tr>";
             Print '<td align="center">'. $row['User'] . '</td>';
@@ -205,10 +209,14 @@ if (isset($_GET['page']))
           }
         echo '</table>';
       }
-    }?>
-  </div>
+    }
+    else 
+    {
+      header("Location:admin.php?page=home"); // page is null
+    }
+    ?>
   <script>
-   function myFunction(id)
+   function myFunction(id) // warning before deleting a menu item.
    {
      var r=confirm("Are you sure you want to delete this record?");
      if (r==true)
@@ -220,19 +228,19 @@ if (isset($_GET['page']))
    function ChangeSort()
    {
       var sortVal = document.getElementById("sort").value;
-      if (sortVal == "OrderDate")
+      if (sortVal == "OrderDate") // change sort dropdown if date is selected.
       {
         document.getElementById("sortD").style.display = "block";
         document.getElementById("sortU").style.display = "none";
         document.getElementById("sortP").style.display = "none";
       }
-      else if (sortVal == "User")
+      else if (sortVal == "User") // change sort dropdown if user is selected.
       {
         document.getElementById("sortD").style.display = "none";
         document.getElementById("sortU").style.display = "block";
         document.getElementById("sortP").style.display = "none";
       }
-      else 
+      else // change sort dropdown if payment method was selected.
       {
         document.getElementById("sortD").style.display = "none";
         document.getElementById("sortU").style.display = "none";

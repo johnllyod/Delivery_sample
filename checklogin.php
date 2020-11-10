@@ -1,4 +1,5 @@
 <?php
+ session_start();
  include 'config/dbConection.php';
  $username = $_POST['username'];
  $password = $_POST['password'];
@@ -13,13 +14,15 @@
 	 {
 		while($row = mysqli_fetch_assoc($results))
 		{
-			 $table_users = $row['username'];
-			 $table_password = $row['password'];
+			$table_users = $row['username'];
+			$table_password = $row['password'];
 		}
+
 		if(($username == $table_users))
 		{
 			if($password == $table_password)
 			{
+
 				 $_SESSION['user'] = $username;
 				 $_SESSION['totalPrice'] = 0;
 				 header("location: home.php");

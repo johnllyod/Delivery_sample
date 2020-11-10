@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="FoodDel.css">
  </head>
  <?php
+ session_start();
  include 'config/dbConection.php'; //Connect to Databse
  if($_SESSION['user'])  //checks if user is logged in
  {
@@ -17,22 +18,23 @@
   	header("location:index.php?page=home"); // redirects if user is not logged in
  }
  ?>
- <body class="bg-dark">
- <div class='container'>
-	<h2 class="text-light">Delivery</h2>
+ <body class='container'>
+	<a href="index.php" class="mb-2"><img src="img/Logo.png"></a>
 	<div class='mx-auto col-lg-9 col-md-12'>
 	<div class='nav'>
+	<div class='navBar btn row mx-auto form-inline'>
 	<?php 
-		if ($_SERVER['REQUEST_METHOD'] === "GET")
+		if ($_SERVER['REQUEST_METHOD'] == "GET") // check if GET is requested.
 	  	{
-	  		if (isset($_GET['remove']))
+	  		if (isset($_GET['remove'])) // Remove the selected item in the cart.
 	  		{
+	  			$_SESSION['totalPrice'] -= $_SESSION['itemPrice'][$_GET['remove']];
 	  			array_splice($_SESSION['cartItem'], $_GET['remove'], 1);
 	  			array_splice($_SESSION['itemQuan'], $_GET['remove'], 1);
 	  			array_splice($_SESSION['itemPrice'], $_GET['remove'], 1);
 	  		}
 	  	}
-	  	else if ($_SERVER['REQUEST_METHOD'] === "POST")
+	  	else if ($_SERVER['REQUEST_METHOD'] == "POST")
 	  	{
 	  		if (isset($_POST['placeOrder']))
 	  		{
@@ -56,38 +58,50 @@
 	  	
 		if (isset($user))
 		{
+			$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
+			$userAddRes = mysqli_query($con, $userAddQ);
+			while ($row = mysqli_fetch_assoc($userAddRes)) 
+			{
+				$address = $row['user_address'];
+			}
+
 			if ($_SESSION['user'] == 'admin')
 			{
-		 		echo "<form action='admin.php' method='GET'><button name='page' value='home'><h3>".$user."</h3></button>";
+        		header("Location:admin.php?page=home"); // If admin is login redirect to the admin page. 
 			}
-			else {
+			else 
+			{
 		 		echo "<form action='index.php' method='GET'><button name='page' value='home'><h3>".$user."</h3></button>";
 			}
 		}
-		else {
-			echo "<form action='index.php' method='GET'><button name='page' value='Home'><h3>Home</h3></button>";
+		else 
+		{
+        	header("Location:index.php?page=home"); // Redirect to index if no user is login.
 		}
-		echo "<button name='page' value='Products'><h3>Products</h3></button>
+
+		echo "<button name='page' value='Product'><h3>Products</h3></button>
 		<button name='page' value='Promo'><h3>Promo</h3></button>
 		<button name='page' value='About'><h3>About</h3></button>
 		<button name='page' value='Contact'><h3>Contact</h3></button>
 		";
-		if (isset($user)){
-			echo"<button name='page' value='logout'><h3>Logout</h3></button>";
+
+		if (isset($user))
+		{
+			echo"<button name='page' value='cart'><h3>Cart</h3></button>
+			<button name='page' value='logout'><h3>Logout</h3></button>";
 		}
-		else {
+		else 
+		{
 			echo"<button name='page' value='login'><h3>Login</h3></button>
 			<button name='page' value='register'><h3>Register</h3></button>";
 		}
 		?>
 		</form>
-	</div></div><br><br>
-		  <h2 align="center" class="text-light">My Account</h2>
+	</div></div></div>
 		  <?php
-
 		  	if (isset($_SESSION['cartItem'][0]))
 		  	{
-		  		echo '<br><br><div class="col-lg-6 col-md-12 text-light text-center mx-auto"><form action="checkout.php" method="GET"><h4>Cart</h4>';
+		  		echo '<br><br><div class="col-lg-6 col-md-12 text-center mx-auto"><form action="checkout.php" method="GET"><h3>CART</h3>';
 		  		for ($i=0; $i < count($_SESSION['cartItem']); $i++) 
 		  		{ 
 		  			echo '<div class="row"><div class="row mx-auto"><h5>'.$_SESSION['cartItem'][$i].'</h5><h5 class="mr-2 ml-2">x'.$_SESSION['itemQuan'][$i].'</h5><h5>Php'.$_SESSION['itemPrice'][$i].'</h5><button name="remove" class="btn btn-danger ml-lg-2" type="submit" value="'.$i.'">Remove</button></form></div></div><br>';
@@ -103,8 +117,8 @@
 
 		  			<div id="codForm" style="display: block;">
 
-		  			<label for="changeFor">Change for</label><br>
-					<input type="number" name="change" id="changeFor" min="'.$_SESSION['totalPrice'].'" value="'.$_SESSION['totalPrice'].'" required/><br>
+		  			<label for="changeFor" id="changeForLabel">Change for</label>
+					<input type="number" class="mx-auto mb-3" name="change" id="changeFor" min="'.$_SESSION['totalPrice'].'" value="'.$_SESSION['totalPrice'].'" style="display: block;" required/>
 
 		  			<label for="note">Note (optional)</label><br>
 		  			<textarea name="note" id="note" rows="5" maxlength="140"/></textarea><br></div><br>
@@ -127,7 +141,7 @@
 		  	}
 		  	else
 		  	{
-		  		echo '<br><br><div class="col-lg-6 col-md-12 text-light text-center mx-auto"><h4>Cart is empty</h4></div>';
+		  		echo '<br><br><div class="col-lg-6 col-md-12 text-center mx-auto"><h4>Cart is empty</h4></div>';
 		  	}
 		  ?>
   <script>
@@ -137,6 +151,8 @@
    		if (codRad.checked)
    		{
    			document.getElementById("cardForm").style.display="none";
+   			document.getElementById("changeFor").style.display="block";
+   			document.getElementById("changeForLabel").style.display="block";
    			document.getElementById("cardName").required= true;
    			document.getElementById("cardNum").required= true;
    			document.getElementById("expDate").required= true;
@@ -145,6 +161,8 @@
    		else 
    		{
    			document.getElementById("cardForm").style.display="block";
+   			document.getElementById("changeFor").style.display="none";
+   			document.getElementById("changeForLabel").style.display="none";
    			document.getElementById("cardName").required= false;
    			document.getElementById("cardNum").required= false;
    			document.getElementById("expDate").required= false;
