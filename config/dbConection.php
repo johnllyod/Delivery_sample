@@ -1,12 +1,12 @@
 <?php
-/*$servername = "db4free.net"; // server site
+$servername = "db4free.net"; // server site
 $username = "personalsql2"; // server username
-$password = "17jtheskull"; // server password*/
+$password = "17jtheskull"; // server password
 
 //For local host
-$servername = "localhost"; // server site
+/*$servername = "localhost"; // server site
 $username = "root"; // server username
-$password = ""; // server password
+$password = ""; // server password*/
 
 $con = new mysqli($servername, $username, $password); // connect to server
 
