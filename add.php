@@ -52,6 +52,25 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 				$_SESSION['itemQuan'][] = $_POST['quantity'];
 				$_SESSION['itemPrice'][] = $_POST['price'];
   				$_SESSION['totalPrice'] += $_POST['price'];
+
+  				echo '<script type="text/javascript">
+  					function DisplayNotif()
+  					{
+  						document.getElementById("warningDiv").style.display = "block";
+  						document.getElementById("textWarning").innerHTML = "Item '.$_POST['addCart'].' is added";
+  					}
+
+  					function RemoveNotif()
+  					{
+  						setTimeout(
+  							function()
+  							{
+  								document.getElementById("warningDiv").style.display = "none";
+  							}, 5000);
+  					}
+  				</script>
+  				<script>DisplayNotif();</script>
+  				<script>RemoveNotif();</script>';
 			}
 		}
 	}
@@ -59,7 +78,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 	{
 		if (isset($_POST['addCart'])) // If not yet login
 		{
-			//header('Location:login.php');
+			header('Location:login.php');
 		}
 	}
 }

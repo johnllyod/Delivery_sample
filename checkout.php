@@ -19,6 +19,7 @@
  }
  ?>
  <body class='container'>
+ 	<div class="bg-success text-center" id="warningDiv" style="color:white; display: none;"><h5 id="textWarning">Failed</h5></div>
 	<a href="index.php" class="mb-2"><img src="img/Logo.png"></a>
 	<div class='mx-auto col-lg-9 col-md-12'>
 	<div class='nav'>
@@ -29,6 +30,26 @@
 	  		if (isset($_GET['remove'])) // Remove the selected item in the cart.
 	  		{
 	  			$_SESSION['totalPrice'] -= $_SESSION['itemPrice'][$_GET['remove']];
+
+				echo '<script type="text/javascript">
+  					function DisplayNotif()
+  					{
+  						document.getElementById("warningDiv").style.display = "block";
+  						document.getElementById("textWarning").innerHTML = "Item '.$_SESSION['cartItem'][$_GET['remove']].' is remove";
+  					}
+
+  					function RemoveNotif()
+  					{
+  						setTimeout(
+  							function()
+  							{
+  								document.getElementById("warningDiv").style.display = "none";
+  							}, 5000);
+  					}
+  				</script>
+  				<script>DisplayNotif();</script>
+  				<script>RemoveNotif();</script>';
+
 	  			array_splice($_SESSION['cartItem'], $_GET['remove'], 1);
 	  			array_splice($_SESSION['itemQuan'], $_GET['remove'], 1);
 	  			array_splice($_SESSION['itemPrice'], $_GET['remove'], 1);
@@ -82,8 +103,7 @@
 		echo "<button name='page' value='Product'><h3>Products</h3></button>
 		<button name='page' value='Promo'><h3>Promo</h3></button>
 		<button name='page' value='About'><h3>About</h3></button>
-		<button name='page' value='Contact'><h3>Contact</h3></button>
-		";
+		<button name='page' value='Contact'><h3>Contact</h3></button>";
 
 		if (isset($user))
 		{
@@ -107,7 +127,16 @@
 		  			echo '<div class="row"><div class="row mx-auto"><h5>'.$_SESSION['cartItem'][$i].'</h5><h5 class="mr-2 ml-2">x'.$_SESSION['itemQuan'][$i].'</h5><h5>Php'.$_SESSION['itemPrice'][$i].'</h5><button name="remove" class="btn btn-danger ml-lg-2" type="submit" value="'.$i.'">Remove</button></form></div></div><br>';
 		  		}
 		  		
-		  		echo '<h5>'.$_SESSION['totalPrice'].'</h5>
+		  		if (empty($address))
+		  		{
+		  			echo '<a href="edit.php?id=address">You do not have an address yet.</a>';
+		  		}
+		  		else 
+		  		{
+		  			echo '<div class="row"><h5>'.$address.'</h5><a href="edit.php?id=address"> edit</a></div>';
+		  		}
+
+		  		echo '<h5>Php '.$_SESSION['totalPrice'].'</h5>
 		  			<form action="checkout.php" method="POST">
 		  			<input type="radio" id="COD" name="payment" value="COD" onclick="ChangePayment()" checked="checked"/>
 		  			<label for="COD">COD</label>
@@ -135,9 +164,12 @@
 		  			<input type="date" name="expdate" id="expDate"/><br>
 
 		  			<label for="secCode">Security Code</label><br>
-					<input type="number" min="100" max="999" name="cardnum" id="secCode"/></div><br>
+					<input type="number" min="100" max="999" name="cardnum" id="secCode"/></div><br>';
 
-		  			<button name="placeOrder" class="btn ml-lg-2" type="submit" value="checkout" style="background-color: #fdcb9e;">Place Order</button></form></div>';
+		  		if (!empty($address))
+		  		{
+		  			echo '<button name="placeOrder" class="btn ml-lg-2" type="submit" value="checkout" style="background-color: #fdcb9e;">Place Order</button></form></div>';
+		  		}
 		  	}
 		  	else
 		  	{

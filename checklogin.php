@@ -2,7 +2,7 @@
  session_start();
  include 'config/dbConection.php';
  $username = $_POST['username'];
- $password = $_POST['password'];
+ $password = md5($_POST['password']);
  $query = "SELECT * from users WHERE username='$username'";
  $results = mysqli_query($con, $query); 
  if ($results)

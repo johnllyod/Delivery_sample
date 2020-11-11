@@ -11,6 +11,7 @@
 </head>
 
 <body class="container">
+<div class="bg-success text-center" id="warningDiv" style="color:white; display: none;"><h5 id="textWarning">Failed</h5></div>
 <a href="index.php" class="mb-2"><img src="img/Logo.png"></a>
 <?php
 session_start();
@@ -104,9 +105,9 @@ if (isset($_GET['page']))
 				if ($row['Sale'] == "yes")
 				{
 					echo "
-					<div class='items col-lg-3 col-md-6 mb-5 float-left'><button name='Product' value='".$row['Product_name']."'><img src='img/".$row['Image_filename']."' class='col-10'></img>
-					</button><h3>".$row['Product_name']." - <h5 style='text-decoration: line-through;' class='col-lg-3 float-left'>P".$row['Price']."</h5><h3 class='col-lg-3 float-left'>P".$row['Sale_Price']."</h3>";
-					echo"</div>";
+					<div class='items col-lg-3 col-md-6 mb-5'><button class='btn' onclick='DisplayDesc(this)' name='Product' value='".$row['Product_name']."' data-toggle='modal' data-target='#food_Desc'><img src='img/".$row['Image_filename']."' class='col-10'></img>
+					</button><h3>".$row['Product_name']."</h3><div class='row'><div class='row mx-auto'><h5 style='text-decoration: line-through;'>Php".$row['Price']."</h5><h3>Php</h3><h3 id='price".$row['Product_name']."'>".$row['Sale_Price']."</h3></div></div>
+					<p id='foodDes".$row['Product_name']."' hidden>".$row['details']."</p></div>";
 				}
 			}
 			echo "</div>";
@@ -210,7 +211,7 @@ else
 				<h4 id="food Descript"></h4>
 			</div>
 			<div class="modal-footer">
-				<form action="index.php?page=Product" method="POST">
+				<form action="index.php?page=<?php echo $_GET['page'] ?>" method="POST">
 					<div class="row"><h5>Php<input type="text" name="price" id="foodPrice" style="width: 100px; border: none; color: #af6b58;" readonly></h5></input>
 					<input type="number" name="quantity" id="foodQuan" min="1" max="10" value="1" style="border-color: #fdcb9e; width: 45px;" onchange="PriceChange()">Quantity</input>
         			<button type="submit" name="addCart" class="btn mr-2 ml-2" id="addtocart" style="background-color: #af6b58; color: #f2efea;">Add to Cart</button>

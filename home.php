@@ -21,6 +21,7 @@
  ?>
  <body>
  <div class='container'>
+ 	<div class="bg-success text-center" id="warningDiv" style="color:white; display: none;"><h5 id="textWarning">Failed</h5></div>
 	<a href="index.php" class="mb-2"><img src="img/Logo.png"></a>
 	<div class='mx-auto col-lg-9 col-md-12'>
 	<div class='nav'>
@@ -31,9 +32,31 @@
 	  		if (isset($_GET['remove'])) // Remove the selected item in the cart.
 	  		{
 	  			$_SESSION['totalPrice'] -= $_SESSION['itemPrice'][$_GET['remove']];
+
+	  			echo '<script type="text/javascript">
+  					function DisplayNotif()
+  					{
+  						document.getElementById("warningDiv").style.display = "block";
+  						document.getElementById("textWarning").innerHTML = "Item '.$_SESSION['cartItem'][$_GET['remove']].' is remove";
+  					}
+
+  					function RemoveNotif()
+  					{
+  						setTimeout(
+  							function()
+  							{
+  								document.getElementById("warningDiv").style.display = "none";
+  							}, 5000);
+  					}
+  				</script>
+  				<script>DisplayNotif();</script>
+  				<script>RemoveNotif();</script>';
+
 	  			array_splice($_SESSION['cartItem'], $_GET['remove'], 1);
 	  			array_splice($_SESSION['itemQuan'], $_GET['remove'], 1);
 	  			array_splice($_SESSION['itemPrice'], $_GET['remove'], 1);
+	  			
+	  			
 	  		}
 	  	}
 	  	
