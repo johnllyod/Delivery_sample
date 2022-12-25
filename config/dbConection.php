@@ -1,7 +1,7 @@
 <?php
-$servername = "db4free.net"; // server site
-$username = "personalsql2"; // server username
-$password = "17jtheskull"; // server password
+$servername = "containers-us-west-58.railway.app"; // server site
+$username = "root"; // server username
+$password = "jCTG3kIHO7Uc11FroTGW"; // server password
 
 //For local host
 /*$servername = "localhost"; // server site
@@ -15,6 +15,6 @@ if ($con->connect_error) {
 }
 else 
 {
-	$db_select = mysqli_select_db($con, "deliverydb2"); // selects database
+	$db_select = mysqli_select_db($con, "railway"); // selects database
 }
 ?> 
