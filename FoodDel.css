@@ -1,0 +1,92 @@
+body{
+	padding: 0px;
+	margin: 0px;
+	color: #af6b58;
+	background-color: #f2efea;
+}
+
+a{
+	color: #adb36e;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #af6b58;
+}
+
+.navBar
+{
+	background-color: #af6b58;
+	box-shadow: 0px 5px #cbbcb1;
+}
+
+.nav button{
+	border: 0;
+	color: #f2efea;
+	background: transparent;
+	background-color: none;
+}
+
+table a{
+	color: #ee6f57;
+}
+
+table a:hover{
+	color: white;
+}
+
+.items{
+	text-align: center;
+	display: inline-table;
+	align-items: center;
+	color: #af6b58;
+}
+
+.items button{
+	border: none;
+	background-color: none;
+	background-color: #af6b58;
+	margin-top: 50px;
+	padding: 15px;
+	box-shadow: 0px 5px #cbbcb1;
+}
+
+.menu{
+	background-color: white;
+}
+
+.about{
+	text-align: center;
+	margin-top:10%;
+	margin-bottom:28%;
+}
+
+.contacts{
+	text-align: center; 
+	margin-bottom: 2%;
+}
+
+.myAccount
+{
+	padding: 5px;
+	color: #f2efea;
+	background-color: #556052;
+	box-shadow: 0px 5px #cbbcb1;
+}
+
+.txtArea
+{
+	border-style: none;
+	outline: none;
+	color: #f2efea;
+	background-color: transparent;
+}
+
+.footer{
+	width: 100%;
+	padding: 2%;
+	color: #f2efea;
+	float: left;
+	text-align: center;
+	background-color: #af6b58;
+}
