@@ -40,6 +40,8 @@ table a:hover{
 	display: inline-table;
 	align-items: center;
 	color: #af6b58;
+	min-width: 320px;
+	min-height: 320px;
 }
 
 .items button{

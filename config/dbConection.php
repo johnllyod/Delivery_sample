@@ -1,20 +1,15 @@
-<?php
+ <?php
+	$servername = "sql6.freesqldatabase.com";
+	$username = "sql6586678";
+	$password = "y3ndKRqTMs";
 
-function OpenCon()
- {
- $dbhost = "containers-us-west-58.railway.app";
- $dbuser = "root";
- $dbpass = "jCTG3kIHO7Uc11FroTGW";
- $db = "railway";
+	$con = new mysqli($servername, $username, $password);
 
- $conn = new mysqli($dbhost, $dbuser, $dbpass,$db) or die("Connect failed: %s\n". $conn -> error);
-
- return $conn;
- }
- 
-function CloseCon($conn)
- {
- $conn -> close();
- }
-   
-?>
+	if ($con->connect_error) {
+	  die("Connection failed: " . $con->connect_error);
+	}
+	else 
+	{
+		$db_select = mysqli_select_db($con, "sql6586678");
+	}
+?> 

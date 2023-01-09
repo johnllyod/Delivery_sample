@@ -5,12 +5,12 @@
   <meta charset="utf-8">
   <link rel="icon" href="img/Logo_Small.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="FoodDel.css">
+  <link rel="stylesheet" href="css\FoodDel.css">
   <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
  </head>
  <?php
  session_start(); //starts the session
- 
+ include 'config/dbConection.php'; //Connect to server //Connect to server
 if (isset($_SESSION['user']))
 {
     if($_SESSION['user'] != "admin") //checks if admin is logged in
@@ -60,15 +60,24 @@ if (isset($_GET['page'])) // check if page has a value
       {
         // Form for adding an item to the menu list.
         echo '<form action="add.php" method="POST">
-         Add more to list: <br/>
-         Product name: <input type="text" name="productN"/><br/>
-         Details: <br><textarea id="detail" name="details" rows="5" cols="32" maxlength="500"></textarea><br><br>
-         Price: <input type="number" name="price"/><br/>
-         On Sale? <input type="checkbox" name="sale[]" value="yes"/><br/>
-         Sale Amount: <input type="number" name="saleprice" min="0" max="100"/>%<br/>
-         Public Post? <input type="checkbox" name="public[]" value="yes"/><br/>
-         Upload image <input type="file" name="image_file" id="fileimage"/><br/>
-         <input type="submit" name="addToList" value="Add to list"/>
+        <div class="container">
+            Add more to menu: <br><br>
+            <div class="row">
+                <div class="col-md-6">
+                    Product name: <input type="text" name="productN" required/><br>
+                    Details: <br><textarea id="detail" name="details" rows="5" cols="32" maxlength="500" required></textarea><br><br></div>';
+
+                echo '<div class="col-md-6">
+                    Price: <input type="number" name="price" required/><br>
+                    On Sale? <input type="checkbox" name="sale[]" id="Sale" onclick="OnSale()" value="yes"/><br>
+                    <span class="d-none" id="SalePrice">Sale Percent: <input type="number" name="saleprice" id="SaleInput" min="0" max="100"/>%<br></span>
+                    Public Post? <input type="checkbox" name="public[]" value="yes"/><br>
+                    Use image link <input type="checkbox" name="useimglink[]" id="CBImgLink" value="yes" onclick="UseImgLink()"/><br>
+                    <span class="" id="UploadImage">Upload image <input type="file" name="imageUpload" id="UploadImageInput" required/></span>
+                    <span class="d-none" id="LinkImage">Image link: <input type="text" name="imgLink" id="LinkImageInput"/></span><br><br>
+                    <input type="submit" name="addToList" value="Add to menu"/></div>
+            </div>
+        </div>
         </form>';
 
         // Table that shows all the items in the menu, you can also edit and delete items here. 
@@ -88,18 +97,17 @@ if (isset($_GET['page'])) // check if page has a value
           <th>Delete</th>
          </tr>';
 
-          $con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error()); //Connect to server
-          $query = mysqli_query($con, "Select * from list"); // SQL Query
+          $query = mysqli_query($con, "Select * from menu"); // SQL Query
 
           while($row = mysqli_fetch_array($query))
           {
             Print "<tr>";
             Print '<td align="center">'. $row['id'] . '</td>';
-      	    Print '<td align="center">'. $row['Product_name'] . "</td>";
+      	    Print '<td align="center">'. $row['product_name'] . "</td>";
             Print '<td align="center">'. $row['details'] . "</td>";
-      	    Print '<td align="center">'. $row['Price'] . "</td>";
-            Print '<td align="center">'. $row['Sale']. "</td>";
-            Print '<td align="center">'. $row['Sale_Price']. "</td>";
+      	    Print '<td align="center">'. $row['price'] . "</td>";
+            Print '<td align="center">'. $row['sale']. "</td>";
+            Print '<td align="center">'. $row['sale_price']. "</td>";
             Print '<td align="center">'. $row['public']. "</td>";
             Print '<td align="center">'. $row['date_posted']. " - ". $row['time_posted']."</td>";
             Print '<td align="center">'. $row['date_edited']. " - ". $row['time_edited']. "</td>";
@@ -152,7 +160,6 @@ if (isset($_GET['page'])) // check if page has a value
           <th>Payment Method</th>
           <th>Note</th>
          </tr>';
-          $con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error()); //Connect to server
 
           if (isset($_POST['sortBy'])) // Checks if filter is used.
           {
@@ -199,12 +206,12 @@ if (isset($_GET['page'])) // check if page has a value
           while($row = mysqli_fetch_array($query)) // get all data available depending on the condition above.
           {
             Print "<tr>";
-            Print '<td align="center">'. $row['User'] . '</td>';
-            Print '<td align="center">'. $row['Orders'] . "</td>";
-            Print '<td align="center">'. $row['OrderDate'] . "</td>";
-            Print '<td align="center">'. $row['Amount'] . "</td>";
-            Print '<td align="center">'. $row['Payment_Method']. "</td>";
-            Print '<td align="center">'. $row['Cus_Note']. "</td>";
+            Print '<td align="center">'. $row['user'] . '</td>';
+            Print '<td align="center">'. $row['orders'] . "</td>";
+            Print '<td align="center">'. $row['order_date'] . "</td>";
+            Print '<td align="center">'. $row['amount'] . "</td>";
+            Print '<td align="center">'. $row['payment_method']. "</td>";
+            Print '<td align="center">'. $row['cus_note']. "</td>";
             Print "</tr>";
           }
         echo '</table>';
@@ -215,38 +222,7 @@ if (isset($_GET['page'])) // check if page has a value
       header("Location:admin.php?page=home"); // page is null
     }
     ?>
-  <script>
-   function myFunction(id) // warning before deleting a menu item.
-   {
-     var r=confirm("Are you sure you want to delete this record?");
-     if (r==true)
-     {
-        window.location.assign("delete.php?id=" + id);
-     }
-   }
 
-   function ChangeSort()
-   {
-      var sortVal = document.getElementById("sort").value;
-      if (sortVal == "OrderDate") // change sort dropdown if date is selected.
-      {
-        document.getElementById("sortD").style.display = "block";
-        document.getElementById("sortU").style.display = "none";
-        document.getElementById("sortP").style.display = "none";
-      }
-      else if (sortVal == "User") // change sort dropdown if user is selected.
-      {
-        document.getElementById("sortD").style.display = "none";
-        document.getElementById("sortU").style.display = "block";
-        document.getElementById("sortP").style.display = "none";
-      }
-      else // change sort dropdown if payment method was selected.
-      {
-        document.getElementById("sortD").style.display = "none";
-        document.getElementById("sortU").style.display = "none";
-        document.getElementById("sortP").style.display = "block";
-      }
-   }
-  </script>
+  <script src="js/admin.js"></script>
  </body>
 </html>

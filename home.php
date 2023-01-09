@@ -5,7 +5,7 @@
   <link rel="icon" href="img/Logo_Small.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
-  <link rel="stylesheet" href="FoodDel.css">
+  <link rel="stylesheet" href="css/FoodDel.css">
  </head>
  <?php
  session_start();
@@ -62,11 +62,11 @@
 	  	
 		if (isset($user))
 		{
-			$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
+			$userAddQ = "SELECT address FROM users WHERE username = '".$user."'";
 			$userAddRes = mysqli_query($con, $userAddQ);
 			while ($row = mysqli_fetch_assoc($userAddRes)) 
 			{
-				$address = $row['user_address'];
+				$address = $row['address'];
 			}
 
 			if ($_SESSION['user'] == 'admin')
@@ -103,10 +103,11 @@
 		</form>
 	</div></div></div><br><br>
 		  
-		  <!-- user details -->
-		  <?php echo '<div class="row"><div class="col-lg-6 col-md-12"><div class="myAccount rounded"><h2 class="text-center">My Account</h2><div class="row mx-auto"><div class="row mx-auto"><h3 class="mx-auto">Username: '.$user.'</h3><a href="edit.php?id='. $user .'"> edit</a></div></div>
-
-		  	  <div class="row mx-auto"><div class="row mx-auto"><h3 class="mx-auto">Address:</h3><h5>'.$address.'</h5><a href="edit.php?id=address"> edit</a></div></div></div>';
+			<!-- user details -->
+			<?php echo '<div class="row"><div class="col-lg-6 col-md-12"><div class="myAccount rounded"><h2 class="text-center">My Account</h2><div class="row mx-auto"><div class="row mx-auto"><h3 class="mx-auto">Username: '.$user.'</h3><a href="edit.php?id='. $user .'"> edit</a></div></div>
+			<div class="row mx-auto"><div class="row mx-auto"><h3 class="mx-auto">Address:</h3><h5>';
+			if (isset($address)){ echo $address; }
+			echo '</h5><a href="edit.php?id=address"> edit</a></div></div></div>';
 
 		  	// List of past orders.
 		  	echo '
@@ -123,19 +124,19 @@
 					echo '<textarea class="txtArea" rows="5" cols="70" readonly>';
 					while ($row = mysqli_fetch_assoc($orderHisRes)) // Get all past orders of the user.
 					{
-						$orderItem = $row['Orders'];
-						$orderDate = $row['OrderDate'];
-						$orderPrice = $row['Amount'];
-						$orderPayMet = $row['Payment_Method'];
-						$orderNote = $row['Cus_Note'];
+						$orderItem = $row['orders'];
+						$orderDate = $row['order_date'];
+						$orderPrice = $row['amount'];
+						$orderPayMet = $row['payment_method'];
+						$orderNote = $row['cus_note'];
 
 						if ($orderNote != "") // Checks if a note is blank.
 						{
-							echo $row['Orders'].' | Total Php'.$row['Amount'].' | Date ordered: '.$row['OrderDate'].'Payment method: '.$orderPayMet.'Note: '.$orderNote;
+							echo $row['orders'].' | Total Php'.$row['amount'].' | Date ordered: '.$row['order_date'].'Payment method: '.$orderPayMet.'Note: '.$orderNote;
 						}
 						else 
 						{
-							echo $row['Orders'].' | Total Php'.$row['Amount'].' | Date ordered: '.$row['OrderDate'].' | Payment method: '.$orderPayMet.'&#013';	
+							echo $row['orders'].' | Total Php'.$row['amount'].' | Date ordered: '.$row['order_date'].' | Payment method: '.$orderPayMet.'&#013';	
 						}
 					}
 					echo '</textarea>';

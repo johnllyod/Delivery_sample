@@ -1,4 +1,5 @@
 <?php
+ include 'config/dbConection.php'; //Connect to server //Connect to server
 if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 { 
 	if (session_status() == PHP_SESSION_NONE) // Check if session was already started
@@ -11,37 +12,46 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 		{
 			if (isset($_POST['addToList'])) // admin adding menu item
 			{
+				 date_default_timezone_set('Asia/Taipei');
 				 $productN = ($_POST['productN']);
-				 $details = ($_POST['details']);
+				 $details = addslashes($_POST['details']);
 				 $price = ($_POST['price']);
-				 $img_Name = $_POST['image_file'];
-				 $time = strftime("%X");//time
-				 $date = strftime("%B %d, %Y");//date
+				 $imgUploadData = $_POST['imageUpload'];
+				 $imgLink = $_POST['imgLink'];
+				 $time = date('g:ia');//time
+				 $date = date('Y-m-d', time());//date
 				 $decision ="no";
 				 $isSale = "no";
 				 $sale_Price = 0;
-				 $con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error()); //Connect to server
-				 foreach($_POST['public'] as $each_check) //gets the data from the checkbox, if its public then it will show up on the product tab of the site.
+				 
+				 if (isset($_POST['public']))
 				 {
-					if($each_check != null)
-					{
-						$decision = "yes";
-					}
+					 foreach($_POST['public'] as $each_check) //gets the data from the checkbox, if its public then it will show up on the product tab of the site.
+					 {
+						if($each_check != null)
+						{
+							$decision = "yes";
+						}
+					 }
 				 }
-				 foreach($_POST['sale'] as $sale_check)
+
+				 if (isset($_POST['sale']))
 				 {
-					if($sale_check != null)
-					{
-						$isSale = "yes";
-						$sale_Price = $price-($price * ($_POST['saleprice']/100));
-					}
+					 foreach($_POST['sale'] as $sale_check)
+					 {
+						if($sale_check != null)
+						{
+							$isSale = "yes";
+							$sale_Price = $price-($price * ($_POST['saleprice']/100));
+						}
+					 }
 				 }
 
 				 if ($productN != "")
 				 {
-					mysqli_query($con, "INSERT INTO list (Product_name, details, Price, date_posted, time_posted, Sale_Price, Sale, public, Image_filename) VALUES ('$productN','$details','$price','$date','$time', $sale_Price, '$isSale','$decision','$img_Name')"); //SQL query 	
+					mysqli_query($con, "INSERT INTO menu (product_name, details, price, date_posted, time_posted, sale_price, sale, public, image_upload, image_link) VALUES ('$productN','$details','$price','$date','$time', $sale_Price, '$isSale','$decision','$imgUploadData','$imgLink')"); //SQL query
 				 }
-				//header("location: admin.php");
+				 header("location: admin.php");
 			}
 		}
 		else 

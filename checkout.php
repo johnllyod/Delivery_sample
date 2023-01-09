@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
-  <link rel="stylesheet" href="FoodDel.css">
+  <link rel="stylesheet" href="css/FoodDel.css">
  </head>
  <?php
  session_start();
@@ -64,7 +64,7 @@
   				{ 
 	  				$allOrders .= $_SESSION['cartItem'][$i]." x".$_SESSION['itemQuan'][$i]." Php".$_SESSION['itemPrice'][$i].". ";
   				}
-	  			$placeOrderQ = "INSERT INTO `orders-list` (User, Orders, OrderDate, Amount, ChangeFor, Payment_Method, Cus_Note) VALUES ('".$user."','".$allOrders."','".date('Y-m-d')."',".$_SESSION['totalPrice'].",".$_POST['change'].",'".$_POST['payment']."','".$_POST['note']."')";
+	  			$placeOrderQ = "INSERT INTO `orders-list` (user, orders, order_date, amount, change_for, payment_method, cus_note) VALUES ('".$user."','".$allOrders."','".date('Y-m-d')."',".$_SESSION['totalPrice'].",".$_POST['change'].",'".$_POST['payment']."','".$_POST['note']."')";
 	  			
 	  			$placeOrderR = mysqli_query($con, $placeOrderQ);
 	  			if ($placeOrderR)
@@ -79,11 +79,11 @@
 	  	
 		if (isset($user))
 		{
-			$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
+			$userAddQ = "SELECT address FROM users WHERE username = '".$user."'";
 			$userAddRes = mysqli_query($con, $userAddQ);
 			while ($row = mysqli_fetch_assoc($userAddRes)) 
 			{
-				$address = $row['user_address'];
+				$address = $row['address'];
 			}
 
 			if ($_SESSION['user'] == 'admin')

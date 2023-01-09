@@ -4,7 +4,7 @@
         <meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
  	 	<link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
-		<link rel="stylesheet" href="FoodDel.css">
+		<link rel="stylesheet" href="css\FoodDel.css">
     </head>
     <body class="bg-dark">
     	<div class="bg-danger text-center" id="warningDiv" style="display: none;"><h5 id="textWarning">Failed</h5></div>

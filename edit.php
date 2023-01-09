@@ -4,14 +4,17 @@
 	  <meta charset="utf-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1">
 	  <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
-	  <link rel="stylesheet" href="FoodDel.css">
+	  <link rel="stylesheet" href="css\FoodDel.css">
 	</head>
  <?php
  session_start();
  include 'config/dbConection.php'; //Connect to Databse
  if($_SESSION['user'])  //checks if user is logged in
  {
- 	$user = $_SESSION['user']; //assigns user value
+	if ($_SESSION['user'] != 'admin')
+	{
+ 		$user = $_SESSION['user']; //assigns user value
+	}
  }
  else
  {
@@ -79,11 +82,11 @@
 	  	
 		if (isset($user))
 		{
-			$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
+			$userAddQ = "SELECT address FROM users WHERE username = '".$user."'";
 			$userAddRes = mysqli_query($con, $userAddQ);
 			while ($row = mysqli_fetch_assoc($userAddRes)) 
 			{
-				$address = $row['user_address'];
+				$address = $row['address'];
 			}
 
 			if ($_SESSION['user'] == 'admin')
@@ -94,10 +97,6 @@
 			{
 		 		echo "<form action='index.php' method='GET'><button name='page' value='home'><h3>".$user."</h3></button>";
 			}
-		}
-		else 
-		{
-        	header("Location:index.php?page=home"); // Redirect to index if no user is login.
 		}
 
 		echo "<button name='page' value='Product'><h3>Products</h3></button>
@@ -143,8 +142,7 @@
 		 $id = $_GET['id'];
 		 $_SESSION['id'] = $id;
 		 $id_exists = true;
-		 $con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error()); //Connect to server
-		 $sql = "Select * from list Where id='$id'";
+		 $sql = "Select * from menu Where id='$id'";
 		 $query = mysqli_query($con, $sql); // SQL Query
 		 $count = mysqli_num_rows($query);
 		 if($count > 0)
@@ -153,23 +151,28 @@
 			{
 				 Print "<tr>";
 				 Print '<td align="center">'. $row['id'] . "</td>";
-				 Print '<td align="center">'. $row['Product_name'] . "</td>";
+				 Print '<td align="center">'. $row['product_name'] . "</td>";
 				 Print '<td align="center">'. $row['details'] . "</td>";
-				 Print '<td align="center">'. $row['Price'] . "</td>";
+				 Print '<td align="center">'. $row['price'] . "</td>";
 				 Print '<td align="center">'. $row['public']. "</td>";
-				 Print '<td align="center">'. $row['Sale']. "</td>";
-				 Print '<td align="center">'. $row['Sale_Price']. "</td>";
+				 Print '<td align="center">'. $row['sale']. "</td>";
+				 Print '<td align="center">'. $row['sale_price']. "</td>";
 				 Print '<td align="center">'. $row['date_posted']. " - ". $row['time_posted']."</td>";
 				 Print '<td align="center">'. $row['date_edited']. " - ". $row['time_edited']. "</td>";
 				 Print "</tr></table><br/>";
 				 
-				 $product_Name = $row['Product_name'];
+				 if ($row['sale_price'] > 0):
+				 $sale_Price = (1-($row['sale_price'] / $price))*100;
+				 else:
+				 $sale_Price = 0;
+				 endif;
+
+				 $product_Name = $row['product_name'];
 				 $details = $row['details'];
-				 $price = $row['Price'];
+				 $price = $row['price'];
 				 $public = $row['public'];
-				 $sale_Price = (1-($row['Sale_Price'] / $price))*100;
-				 $sale = $row['Sale'];
-				 $imagefile = $row['Image_filename'];
+				 $sale = $row['sale'];
+				 $imagelink = $row['image_link'];
 			 }
 		}
 		 else
@@ -198,93 +201,111 @@ if($id_exists)
 {
 	if ($_SESSION['user'] == 'admin')
 	{
-		 Print '<form action="edit.php" method="POST">
-		   Update List: <br/>
-		   Product name: <input type="text" name="product_Name" value="'.$product_Name.'"/><br/>
-		   Details: <input type="text" name="details" value="'.$details.'"/><br/>
-		   Price: <input type="number" name="price" value="'.$price.'"/><br/>';
-		   if ($sale == "yes")
-		   {
-				print 'Sale: <input type="checkbox" name="sale[]" value="'.$sale.'" checked/><br/>';
-		   }
-		   else 
-		   {
-				print 'Sale: <input type="checkbox" name="sale[]" value="'.$sale.'"/><br/>';
-		   }
-		   print'Sale Amount: <input type="number" name="saleprice" value="'.$sale_Price.'" min="0" max="100"/>%<br/>';
-		   if($public == "yes") 
-		   {
-			 Print 'Public Post? <input type="checkbox" name="public[]" checked/><br/>';
-		   }
-		  else 
-		  {
-			Print 'Public Post? <input type="checkbox" name="public[]"/><br/>';
-		  }
-		  Print'Upload image <input type="file" name="image_file" id="fileimage"/><br/>
-		  <input type="submit" name="update" value="Update List"/></form>';
+		Print '<form action="edit.php" method="POST">
+		Update <b>'.$product_Name.'</b>: <br><br>
+		Product name: <input type="text" name="product_Name" value="'.$product_Name.'" required/><br><br>
+		Details: <input type="text" name="details" value="'.$details.'" required/><br><br>
+		Price: <input type="number" name="price" value="'.$price.'" required/><br><br>';
+		if ($sale == "yes")
+		{
+			print 'Sale: <input type="checkbox" name="sale[]" value="'.$sale.'" checked/><br><br>';
+		}
+		else 
+		{
+			print 'Sale: <input type="checkbox" name="sale[]" value="'.$sale.'"/><br><br>';
+		}
+		print'Sale Amount: <input type="number" name="saleprice" value="'.$sale_Price.'" min="0" max="100"/>%<br><br>';
+		if($public == "yes") 
+		{
+			Print 'Public Post? <input type="checkbox" name="public[]" checked/><br><br>';
+		}
+		else 
+		{
+			Print 'Public Post? <input type="checkbox" name="public[]"/><br><br>';
+		}
+		if(empty($imagelink)):
+			Print'Use image link <input type="checkbox" name="useimglink[]" id="CBImgLink" value="yes" onclick="UseImgLink()"/><br>
+			<span class="" id="UploadImage">Upload image <input type="file" name="imageUpload" id="UploadImageInput" required/></span>
+			<span class="d-none" id="LinkImage">Image link: <input type="text" name="imgLink" id="LinkImageInput"/></span><br><br>';
+		else:
+			Print'Use image link <input type="checkbox" name="useimglink[]" id="CBImgLink" value="yes" onclick="UseImgLink()" checked/><br>
+			<span class="d-none" id="UploadImage">Upload image <input type="file" name="imageUpload" id="UploadImageInput"/></span>
+			<span class="" id="LinkImage">Image link: <input type="text" name="imgLink" value="'.$imagelink.'" id="LinkImageInput" required/></span><br><br>';
+		endif;
+
+		Print'<input type="submit" name="update" value="Update Menu"/></form>
+		<a href="admin.php?page=home" class="btn btn-success">Cancel</a>';
 	}
 }
 else
 {
 	Print '<h2 align="center">There is no data to be edited.</h2>';
 	header("location: home.php");
-
 }
  ?>
 	</body>
+	<script src="js/admin.js"></script>
 </html>
 
 <?php
  if(isset($_POST['update']))
  {
-	$con = mysqli_connect("localhost", "root", "", "deliverydb2") or die(mysqli_error()); //Connect to server
-	
-	if ($_POST['update'] == "Update List")
+	if ($_POST['update'] == "Update Menu")
 	{
 		$productN = ($_POST['product_Name']);
-		$details = ($_POST['details']);
+		$details = addslashes($_POST['details']);
 		$pPrice = ($_POST['price']);
 		$public = "no";
 		$sale = "no";
 		$sale_Price = 0;
 		$id = $_SESSION['id'];
-		$time = strftime("%X");//time
-		$date = strftime("%B %d, %Y");//date
-		foreach($_POST['public'] as $list)
+		$time = date('g:ia');//time
+		$date = date('Y-m-d', time());//date
+		if (isset($_POST['public']))
 		{
-			if($list != null)
+			foreach($_POST['public'] as $list)
 			{
-				$public = "yes";
+				if($list != null)
+				{
+					$public = "yes";
+				}
 			}
 		}
-		foreach($_POST['sale'] as $list)
+
+		if (isset($_POST['sale']))
 		{
-			if($list != null)
+			foreach($_POST['sale'] as $list)
 			{
-				$sale = "yes";
-				$sale_Price = $pPrice-($pPrice * ($_POST['saleprice']/100));
+				if($list != null)
+				{
+					$sale = "yes";
+					$sale_Price = $pPrice-($pPrice * ($_POST['saleprice']/100));
+				}
 			}
 		}
-		if (!empty($_POST['image_file']))
+		if (!empty($_POST['imageUpload']))
 		{
-			$imgName = $_POST['image_file'];
-			mysqli_query($con, "UPDATE list SET Product_name='$productN', details='$details', Price=$pPrice, public='$public', date_edited='$date', time_edited='$time', Sale_Price=$sale_Price, Sale='$sale', Image_filename='$imgName' WHERE id='$id'");
+			$imgData = $_POST['imageUpload'];
+			mysqli_query($con, "UPDATE menu SET product_name='$productN', details='$details', price=$pPrice, public='$public', date_edited='$date', time_edited='$time', sale_price=$sale_Price, sale='$sale', image_upload='$imgData' WHERE id='$id'");
 		}
 		else 
 		{
-			mysqli_query($con, "UPDATE list SET Product_name='$productN', details='$details', Price=$pPrice, public='$public', date_edited='$date', time_edited='$time', Sale_Price=$sale_Price, Sale='$sale' WHERE id='$id'");
+			$imgData = $_POST['imgLink'];
+			mysqli_query($con, "UPDATE menu SET product_name='$productN', details='$details', price=$pPrice, public='$public', date_edited='$date', time_edited='$time', sale_price=$sale_Price, sale='$sale', image_link='$imgData' WHERE id='$id'");
 		}
 		header("location: admin.php?page=home");
 	}
 	else if ($_POST['update'] == "Update user")
 	{
-		mysqli_query($con, "UPDATE users SET username='$username' where username = '".$_SESSION['user']."'");
-		$_SESSION['user'] = $_POST['username'];
+		$newUsername = $_POST['username'];
+		mysqli_query($con, "UPDATE users SET username='$newUsername' where username = '".$_SESSION['user']."'");
+		$_SESSION['user'] = $newUsername;
 		header("location: home.php");
 	}
 	else if ($_POST['update'] == "Update address")
 	{
-		mysqli_query($con, "UPDATE users SET user_address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'");
+		mysqli_query($con, "UPDATE users SET address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'");
+		echo "UPDATE users SET address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'";
 		header("location: home.php");
 	}
  }
