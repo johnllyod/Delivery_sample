@@ -62,11 +62,11 @@
 	  	
 		if (isset($user))
 		{
-			$userAddQ = "SELECT address FROM users WHERE username = '".$user."'";
+			$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
 			$userAddRes = mysqli_query($con, $userAddQ);
 			while ($row = mysqli_fetch_assoc($userAddRes)) 
 			{
-				$address = $row['address'];
+				$address = $row['user_address'];
 			}
 
 			if ($_SESSION['user'] == 'admin')
@@ -113,7 +113,7 @@
 		  	echo '
 		  	<div class="myAccount rounded mt-5"><h4 class="text-center">Order History</h4>';
 
-			$orderHisQ = "SELECT * FROM `orders-list` WHERE User = '".$user."'";
+			$orderHisQ = "SELECT * FROM `orders_list` WHERE username = '".$user."'";
 			$orderHisRes = mysqli_query($con, $orderHisQ);
 			$numHisRow = mysqli_num_rows($orderHisRes);
 

@@ -27,11 +27,11 @@ if(isset($_SESSION['user']))  //checks if user is logged in
 	<div class='navBar btn row mx-auto form-inline'>";
 	if (isset($user)) // Checks if user is login
 	{
-		$userAddQ = "SELECT address FROM users WHERE username = '".$user."'";
+		$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
 		$userAddRes = mysqli_query($con, $userAddQ);
 		while ($row = mysqli_fetch_assoc($userAddRes)) 
 		{
-			$address = $row['address'];
+			$address = $row['user_address'];
 		}
 
 		if ($_SESSION['user'] != 'admin')
@@ -80,18 +80,20 @@ if (isset($_GET['page']))
 			{
 				if ($row['public'] == "yes") // If a product is set as public then it will be displayed.
 				{
-					if ($row['image_upload'])
-					{
-						$imageData = $row['image_upload'];
-					}
-					else 
-					{
-						$imageData = $row['image_link'];
-					}
-
 					echo "
-					<div class='items col-lg-3 col-md-6 mb-5'><button class='btn' onclick='DisplayDesc(this)' name='Product' value='".$row['product_name']."' data-toggle='modal' data-target='#food_Desc'><img src='".$imageData."' class='col-10'></img>
-					</button><h3>".$row['product_name']."</h3>";
+					<div class='items col-lg-3 col-md-6 m-auto'>
+						<button class='btn' onclick='DisplayDesc(this)' name='Product' value='".$row['product_name']."' data-toggle='modal' data-target='#food_Desc'>";
+					
+						if ($row['image_upload'])
+						{
+							echo '<img src="data:image;base64,'.$row['image_upload'].'" class="col-10"></img>';
+						}
+						else 
+						{
+							echo "<img src='".$row['image_link']."' class='col-10'></img>";
+						}
+
+						echo "</button><h3>".$row['product_name']."</h3>";
 					if ($row['sale'] == "no") // item is not on sale.
 					{
 						echo "<div class='row'><div class='row mx-auto'><h3>Php</h3><h3 id='price".$row['product_name']."'>".$row['price']."</h3></div></div>";

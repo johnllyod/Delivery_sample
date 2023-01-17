@@ -16,8 +16,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 				 $productN = ($_POST['productN']);
 				 $details = addslashes($_POST['details']);
 				 $price = ($_POST['price']);
-				 $imgUploadData = $_POST['imageUpload'];
-				 $imgLink = $_POST['imgLink'];
 				 $time = date('g:ia');//time
 				 $date = date('Y-m-d', time());//date
 				 $decision ="no";
@@ -45,6 +43,18 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 							$sale_Price = $price-($price * ($_POST['saleprice']/100));
 						}
 					 }
+				 }
+				 
+				 if (isset($_POST['useimglink']))
+				 {
+					$imgLink = $_POST['imgLink'];
+					$imgUploadData = null;
+				 }
+				 else 
+				 {
+					$imgLink = null;
+					$imgUploadData = $_FILES['imageUpload']['tmp_name'];
+					$imgUploadData = base64_encode(file_get_contents(addslashes($imgUploadData)));
 				 }
 
 				 if ($productN != "")

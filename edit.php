@@ -67,7 +67,7 @@
   				{ 
 	  				$allOrders .= $_SESSION['cartItem'][$i]." x".$_SESSION['itemQuan'][$i]." Php".$_SESSION['itemPrice'][$i].". ";
   				}
-	  			$placeOrderQ = "INSERT INTO `orders-list` (User, Orders, OrderDate, Amount, ChangeFor, Payment_Method, Cus_Note) VALUES ('".$user."','".$allOrders."','".date('Y-m-d')."',".$_SESSION['totalPrice'].",".$_POST['change'].",'".$_POST['payment']."','".$_POST['note']."')";
+	  			$placeOrderQ = "INSERT INTO `orders_list` (User, Orders, OrderDate, Amount, ChangeFor, Payment_Method, Cus_Note) VALUES ('".$user."','".$allOrders."','".date('Y-m-d')."',".$_SESSION['totalPrice'].",".$_POST['change'].",'".$_POST['payment']."','".$_POST['note']."')";
 	  			
 	  			$placeOrderR = mysqli_query($con, $placeOrderQ);
 	  			if ($placeOrderR)
@@ -82,11 +82,11 @@
 	  	
 		if (isset($user))
 		{
-			$userAddQ = "SELECT address FROM users WHERE username = '".$user."'";
+			$userAddQ = "SELECT user_address FROM users WHERE username = '".$user."'";
 			$userAddRes = mysqli_query($con, $userAddQ);
 			while ($row = mysqli_fetch_assoc($userAddRes)) 
 			{
-				$address = $row['address'];
+				$address = $row['user_address'];
 			}
 
 			if ($_SESSION['user'] == 'admin')
@@ -201,10 +201,10 @@ if($id_exists)
 {
 	if ($_SESSION['user'] == 'admin')
 	{
-		Print '<form action="edit.php" method="POST">
+		Print '<form method="POST" enctype="multipart/form-data" action="edit.php">
 		Update <b>'.$product_Name.'</b>: <br><br>
 		Product name: <input type="text" name="product_Name" value="'.$product_Name.'" required/><br><br>
-		Details: <input type="text" name="details" value="'.$details.'" required/><br><br>
+		Details: <br><textarea type="text" name="details" required>'.$details.'</textarea><br><br>
 		Price: <input type="number" name="price" value="'.$price.'" required/><br><br>';
 		if ($sale == "yes")
 		{
@@ -283,15 +283,18 @@ else
 				}
 			}
 		}
-		if (!empty($_POST['imageUpload']))
+		if (isset($_POST['useimglink']))
 		{
-			$imgData = $_POST['imageUpload'];
-			mysqli_query($con, "UPDATE menu SET product_name='$productN', details='$details', price=$pPrice, public='$public', date_edited='$date', time_edited='$time', sale_price=$sale_Price, sale='$sale', image_upload='$imgData' WHERE id='$id'");
+			$imgData = $_POST['imgLink'];
+			$updateCon = "UPDATE menu SET product_name='$productN', details='$details', price=$pPrice, public='$public', date_edited='$date', time_edited='$time', sale_price=$sale_Price, sale='$sale', image_upload=null, image_link='$imgData' WHERE id='$id'";
+			mysqli_query($con, $updateCon);
 		}
 		else 
 		{
-			$imgData = $_POST['imgLink'];
-			mysqli_query($con, "UPDATE menu SET product_name='$productN', details='$details', price=$pPrice, public='$public', date_edited='$date', time_edited='$time', sale_price=$sale_Price, sale='$sale', image_link='$imgData' WHERE id='$id'");
+			$imgUploadData = $_FILES['imageUpload']['tmp_name'];
+			$imgUploadData = base64_encode(file_get_contents(addslashes($imgUploadData)));
+			$updateCon = "UPDATE menu SET product_name='$productN', details='$details', price=$pPrice, public='$public', date_edited='$date', time_edited='$time', sale_price=$sale_Price, sale='$sale', image_upload='$imgUploadData', image_link=null WHERE id='$id'";
+			mysqli_query($con, $updateCon);
 		}
 		header("location: admin.php?page=home");
 	}
@@ -304,8 +307,8 @@ else
 	}
 	else if ($_POST['update'] == "Update address")
 	{
-		mysqli_query($con, "UPDATE users SET address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'");
-		echo "UPDATE users SET address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'";
+		mysqli_query($con, "UPDATE users SET user_address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'");
+		//echo "UPDATE users SET user_address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'";
 		header("location: home.php");
 	}
  }

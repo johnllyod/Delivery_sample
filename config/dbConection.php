@@ -1,7 +1,11 @@
  <?php
-	$servername = "sql6.freesqldatabase.com";
-	$username = "sql6586678";
-	$password = "y3ndKRqTMs";
+	$servername = "db4free.net";
+	$username = "personalsql2";
+	$password = "deliverySample123";
+
+	/*$servername = "localhost";
+	$username = "root";
+	$password = "";*/
 
 	$con = new mysqli($servername, $username, $password);
 
@@ -10,6 +14,6 @@
 	}
 	else 
 	{
-		$db_select = mysqli_select_db($con, "sql6586678");
+		$db_select = mysqli_select_db($con, "deliverydb2");
 	}
 ?> 

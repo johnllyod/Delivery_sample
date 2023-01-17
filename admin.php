@@ -59,7 +59,7 @@ if (isset($_GET['page'])) // check if page has a value
       if ($_GET['page'] != 'orders') // if page is not equal to orders.
       {
         // Form for adding an item to the menu list.
-        echo '<form action="add.php" method="POST">
+        echo '<form action="add.php" method="POST" enctype="multipart/form-data">
         <div class="container">
             Add more to menu: <br><br>
             <div class="row">
@@ -168,12 +168,12 @@ if (isset($_GET['page'])) // check if page has a value
               if ($_POST['byOrderDate'] == date('Y-m-d')) // Sort orders that are made only for today
               {
                 echo $_POST['sort'].", "."Today";
-                $sqlStr = "SELECT * FROM `orders-list` where ".$_POST['sort']."='".date('Y-m-d')."'";
+                $sqlStr = "SELECT * FROM `orders_list` where ".$_POST['sort']."='".date('Y-m-d')."'";
               }
               else if ($_POST['byOrderDate'] == "week") // Sort orders that are made only for the whole week
               {
                 echo $_POST['sort'].", "."This Week";
-                $sqlStr = "SELECT * from `orders-list` WHERE OrderDate >= DATE_ADD(NOW(), INTERVAL -7 DAY) and OrderDate <= NOW()";
+                $sqlStr = "SELECT * from `orders_list` WHERE OrderDate >= DATE_ADD(NOW(), INTERVAL -7 DAY) and OrderDate <= NOW()";
               }
               else
               {
@@ -185,22 +185,22 @@ if (isset($_GET['page'])) // check if page has a value
                 {
                   echo $_POST['sort'].", This year";
                 }
-                $sqlStr = "SELECT * from `orders-list` WHERE OrderDate LIKE '%".$_POST['byOrderDate']."%'";
+                $sqlStr = "SELECT * from `orders_list` WHERE OrderDate LIKE '%".$_POST['byOrderDate']."%'";
               }
             }
             else if ($_POST['sort'] == "User") // Sort orders by who order the item(s).
             {
-                $sqlStr = "SELECT * from `orders-list` order by User ".$_POST['byUser'].""; // the value of $_POST['byUser'] is either ASC or DESC
+                $sqlStr = "SELECT * from `orders_list` order by User ".$_POST['byUser'].""; // the value of $_POST['byUser'] is either ASC or DESC
             }
             else if ($_POST['sort'] == "Payment_Method")
             {
-                $sqlStr = "SELECT * from `orders-list` WHERE Payment_Method = '".$_POST['byPayment_Method']."'"; // the value of $_POST['byPayment_Method'] is either COD or Card
+                $sqlStr = "SELECT * from `orders_list` WHERE Payment_Method = '".$_POST['byPayment_Method']."'"; // the value of $_POST['byPayment_Method'] is either COD or Card
             }
             $query = mysqli_query($con, $sqlStr); // SQL Query
           }
           else 
           {
-            $query = mysqli_query($con, "SELECT * FROM `orders-list`"); // SQL Query if there is no filter.
+            $query = mysqli_query($con, "SELECT * FROM `orders_list`"); // SQL Query if there is no filter.
           }
 
           while($row = mysqli_fetch_array($query)) // get all data available depending on the condition above.
