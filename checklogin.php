@@ -25,7 +25,7 @@
 
 				 $_SESSION['user'] = $username;
 				 $_SESSION['totalPrice'] = 0;
-				 header("location: home.php");
+				 echo '<script>window.location.href = "home.php"</script>';
 			}
 			else
 			{

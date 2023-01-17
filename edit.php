@@ -1,3 +1,7 @@
+<?Php 
+ session_start();
+ include 'config/dbConection.php'; //Connect to Databse
+?>
 <html>
 	<head>
 	  <title>My Food Delivery Store</title>
@@ -7,8 +11,6 @@
 	  <link rel="stylesheet" href="css\FoodDel.css">
 	</head>
  <?php
- session_start();
- include 'config/dbConection.php'; //Connect to Databse
  if($_SESSION['user'])  //checks if user is logged in
  {
 	if ($_SESSION['user'] != 'admin')
@@ -18,7 +20,7 @@
  }
  else
  {
-  	header("location:index.php?page=home"); // redirects if user is not logged in
+  	echo '<script>window.location.href = "index.php?page=home"</script>'; // redirects if user is not logged in
  }
  $id_exists = false;
  ?>
@@ -75,7 +77,7 @@
 	  				unset($_SESSION['cartItem']);
 	  				unset($_SESSION['itemQuan']);
 	  				unset($_SESSION['itemPrice']);
-	  				header('Location: checkout.php');
+					echo '<script>window.location.href = "checkout.php"</script>';
 	  			}
 	  		}
 	  	}
@@ -91,7 +93,7 @@
 
 			if ($_SESSION['user'] == 'admin')
 			{
-        		header("Location:admin.php?page=home"); // If admin is login redirect to the admin page. 
+        		echo '<script>window.location.href = "admin.php?page=home"</script>'; // If admin is login redirect to the admin page. 
 			}
 			else 
 			{
@@ -240,7 +242,7 @@ if($id_exists)
 else
 {
 	Print '<h2 align="center">There is no data to be edited.</h2>';
-	header("location: home.php");
+	echo '<script>window.location.href = "home.php"</script>';
 }
  ?>
 	</body>
@@ -296,20 +298,20 @@ else
 			$updateCon = "UPDATE menu SET product_name='$productN', details='$details', price=$pPrice, public='$public', date_edited='$date', time_edited='$time', sale_price=$sale_Price, sale='$sale', image_upload='$imgUploadData', image_link=null WHERE id='$id'";
 			mysqli_query($con, $updateCon);
 		}
-		header("location: admin.php?page=home");
+		echo '<script>window.location.href = "admin.php?page=home"</script>';
 	}
 	else if ($_POST['update'] == "Update user")
 	{
 		$newUsername = $_POST['username'];
 		mysqli_query($con, "UPDATE users SET username='$newUsername' where username = '".$_SESSION['user']."'");
 		$_SESSION['user'] = $newUsername;
-		header("location: home.php");
+		echo '<script>window.location.href = "home.php"</script>';
 	}
 	else if ($_POST['update'] == "Update address")
 	{
 		mysqli_query($con, "UPDATE users SET user_address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'");
-		//echo "UPDATE users SET user_address='".$_POST['houseNum'].", ".$_POST['sub_build'].", ".$_POST['street']." street, Brgy. ".$_POST['barangay'].", ".$_POST['city']."' where username = '".$_SESSION['user']."'";
-		header("location: home.php");
+		
+		echo '<script>window.location.href = "home.php"</script>';
 	}
  }
 ?>

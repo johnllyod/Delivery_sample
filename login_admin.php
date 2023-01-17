@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <html>
     <head>
         <title>Food delivery</title>
@@ -15,9 +18,8 @@
 	  		{
 		  		if ($_POST['password'] == "admin")
 		  		{
-		  			session_start();
 		  			$_SESSION['user'] = "admin";
-		  			header("Location: admin.php?page=home");
+					echo '<script>window.location.href = "admin.php?page=home"</script>';
 		  		}
 	  		}
 	  	}

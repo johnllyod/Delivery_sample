@@ -1,3 +1,7 @@
+<?php
+ session_start(); //starts the session
+ include 'config/dbConection.php'; //Connect to server //Connect to server
+?>
 <html>
  <head>
   <title>Home MadMeal</title>
@@ -9,13 +13,11 @@
   <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist\css\bootstrap.min.css">
  </head>
  <?php
- session_start(); //starts the session
- include 'config/dbConection.php'; //Connect to server //Connect to server
 if (isset($_SESSION['user']))
 {
     if($_SESSION['user'] != "admin") //checks if admin is logged in
     {
-      header("location:index.php?page=home"); // redirect to the index if the user is not admin
+	    echo '<script>window.location.href = "index.php?page=home"</script>';
     }
     else 
     {
@@ -24,7 +26,7 @@ if (isset($_SESSION['user']))
 } 
 else 
 {
-  header("location: login_admin.php"); // redirect to the admin login page if admin is not login
+    echo '<script>window.location.href = "login_admin.php"</script>'; // redirect to the admin login page if admin is not login
 }
 
 if (isset($_GET['page'])) // check if page has a value
@@ -32,11 +34,11 @@ if (isset($_GET['page'])) // check if page has a value
   if ($_GET['page'] == "logout") // logging out
   { 
     session_destroy(); // removes all session
-    header("location: login_admin.php"); // redirect to the login page
+    echo '<script>window.location.href = "login_admin.php"</script>'; // redirect to the login page
   }
   else if ($_GET['page'] == "Product")
   { 
-    header("location: index.php?page=Product"); // change the page to the product page
+    echo '<script>window.location.href = "index.php?page=Product"</script>'; // change the page to the product page
   }
 }
  ?>
@@ -219,7 +221,7 @@ if (isset($_GET['page'])) // check if page has a value
     }
     else 
     {
-      header("Location:admin.php?page=home"); // page is null
+      echo '<script>window.location.href = "admin.php?page=home"</script>'; // page is null
     }
     ?>
 

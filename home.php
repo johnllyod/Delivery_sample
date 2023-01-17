@@ -1,3 +1,7 @@
+<?php
+ session_start();
+ include 'config/dbConection.php'; //Connect to Databse
+?>
 <html>
  <head>
   <title>Home MadMeal</title>
@@ -8,15 +12,13 @@
   <link rel="stylesheet" href="css/FoodDel.css">
  </head>
  <?php
- session_start();
- include 'config/dbConection.php'; //Connect to Databse
  if(isset($_SESSION['user']))  //checks if user is logged in
  {
  	$user = $_SESSION['user']; //assigns user value
  }
  else
  {
-  	header("location:index.php?page=home"); // redirects if user is not logged in
+  	echo '<script>window.location.href = "index.php?page=home"</script>'; // redirects if user is not logged in
  }
  ?>
  <body>
@@ -71,7 +73,7 @@
 
 			if ($_SESSION['user'] == 'admin')
 			{
-        		header("Location:admin.php?page=home"); // If admin is login redirect to the admin page. 
+        		echo '<script>window.location.href = "admin.php?page=home"</script>'; // If admin is login redirect to the admin page. 
 			}
 			else 
 			{
@@ -80,7 +82,7 @@
 		}
 		else 
 		{
-        	header("Location:index.php?page=home"); // Redirect to index if no user is login.
+        	echo '<script>window.location.href = "index.php?page=home"</script>'; // Redirect to index if no user is login.
 		}
 
 		echo "<button name='page' value='Product'><h3>Products</h3></button>

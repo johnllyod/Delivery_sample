@@ -61,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 				 {
 					mysqli_query($con, "INSERT INTO menu (product_name, details, price, date_posted, time_posted, sale_price, sale, public, image_upload, image_link) VALUES ('$productN','$details','$price','$date','$time', $sale_Price, '$isSale','$decision','$imgUploadData','$imgLink')"); //SQL query
 				 }
-				 header("location: admin.php");
+				 echo '<script>window.location.href = "admin.php"</script>';
 			}
 		}
 		else 
@@ -98,7 +98,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") //Check if GET Method is requested.
 	{
 		if (isset($_POST['addCart'])) // If not yet login
 		{
-			header('Location:login.php');
+			echo '<script>window.location.href = "login.php"</script>';
 		}
 	}
 }

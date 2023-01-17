@@ -1,3 +1,7 @@
+<?php
+	session_start();
+	include 'config/dbConection.php';
+?>
 <html>
 <head>
 <meta charset="uft-8">
@@ -14,8 +18,6 @@
 <div class="bg-success text-center" id="warningDiv" style="color:white; display: none;"><h5 id="textWarning">Failed</h5></div>
 <a href="index.php" class="mb-2"><img src="img/Logo.png"></a>
 <?php
-session_start();
-include 'config/dbConection.php';
 $query = mysqli_query($con, "Select * from menu");
 
 if(isset($_SESSION['user']))  //checks if user is logged in
@@ -151,23 +153,23 @@ if (isset($_GET['page']))
 		";
 		break;
 		case 'login': // Redirect to the login page.
-			header("Location: login.php");
+			echo '<script>window.location.href = "login.php"</script>';
 		break;
 
 		case 'cart': // Redirect to the checkout page.
-			header("Location: checkout.php");
+			echo '<script>window.location.href = "checkout.php"</script>';
 		break;
 
 		case 'register': // Redirect to the register page.
-			header("Location: register.php");
+			echo '<script>window.location.href = "register.php"</script>';
 		break;
 		
 		case 'logout':
-			header("Location: logout.php");
+			echo '<script>window.location.href = "logout.php"</script>';
 		break;
 		
 		case 'home': // Redirect to the home page.
-			header("Location: home.php");
+			echo '<script>window.location.href = "home.php"</script>';
 		break;
 		
 		default: // Display the main page.

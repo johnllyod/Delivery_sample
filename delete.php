@@ -4,18 +4,19 @@
  if($_SESSION['user']){ //checks if user is logged in
     if($_SESSION['user'] != "admin") //checks if admin is logged in
     {
-      header("location:index.php?page=home"); // redirect to the index if the user is not admin
+      echo '<script>window.location.href = "index.php?page=home"</script>'; // redirect to the index if the user is not admin
     }
 }
- else{
-	header("location:index.php"); // redirects if user is not logged in
+else
+{
+    echo '<script>window.location.href = "index.php"</script>'; // redirects if user is not logged in
 }
- if($_SERVER['REQUEST_METHOD'] == "GET")
-	{
-		$id = $_GET['id'];
-		mysqli_query($con, "DELETE FROM menu WHERE id='$id'");
-		$resetQuery = 'ALTER TABLE menu AUTO_INCREMENT = 0';
-		$resetResult = mysqli_query($conn, $resetQuery);
-		 header("location: home.php");
-	}
+if($_SERVER['REQUEST_METHOD'] == "GET")
+{
+    $id = $_GET['id'];
+    mysqli_query($con, "DELETE FROM menu WHERE id='$id'");
+    $resetQuery = 'ALTER TABLE menu AUTO_INCREMENT = 0';
+    $resetResult = mysqli_query($conn, $resetQuery);
+    echo '<script>window.location.href = "home.php"</script>';
+}
 ?>
