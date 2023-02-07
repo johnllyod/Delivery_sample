@@ -1,0 +1,19 @@
+{
+  "name": "delivery_sample",
+  "version": "1.0.0",
+  "description": "A delivery website sample",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnllyod/Delivery_sample.git"
+  },
+  "author": "John Llyod Apolo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnllyod/Delivery_sample/issues"
+  },
+  "homepage": "https://github.com/johnllyod/Delivery_sample#readme"
+}
